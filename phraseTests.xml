@@ -1,0 +1,10 @@
+<tests>
+<test id="1">
+	<setPhrase>If I [ ] [ ] he was coming, I [ ] [ ] [ ] my time.</setPhrase>
+	<word>had</word>
+	<word>known</word>
+	<word>would</word>
+	<word>have</word>
+	<word>taken</word>
+</test>
+</tests>
