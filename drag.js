@@ -2,13 +2,9 @@ var textXML;
 var wordBoxDivArray = new Array();
 var blanksSpanArray = new Array();
 var blanksFloatDivArray = new Array();
-
-
-// The location of [the word box #i (index)] is what is stored there.
+var currentWordLocationArray = new Array(); // The location of [the word box #i (index)] is what is stored there.
 // +100 means in a blank
 // currentWordLocationArray[1] = 102  => word 1 is in blank 2 (0 indexed)
-var currentWordLocationArray = new Array();
-// TODO I can likely think of a better structure to do this //
 
 var locations = {
 	staticStartX : -1, // touch start X
@@ -18,12 +14,12 @@ var locations = {
 }
 
 var statusFlags = {  
-	stretchUpRatio : 1,    // used to move elements around when device is rotated
+	stretchUpRatio : 1,
 	numberOfWords : -1,    // number of words, and blanks, in the phrase
-	currentWord : null,    // if a word is dragged or tapped, its value goes here
+	currentWord : null,      // if a word is dragged or tapped, it's value goes here
 	touchHasMoved : false, // Used to distinguish taps and drags
 	selectedWord : false,  // A word box was tapped, the rest of the screen is dim
-	selectedBlank : false  // A blank was tapped, awaiting a word, not used currently
+	selectedBlank : false  // A blank was tapped, awaiting a word
 }
 
 function init() {
@@ -182,7 +178,6 @@ function onTouchBlankMove(e) {
 
 function onTouchBlankEnd(e) {
 	e.preventDefault();
-	// TODO this should check if a word was moved between blanks //
 	repositionWordDivs();
 }
 
@@ -203,7 +198,8 @@ function loadTests() {
 	var xmlDoc;
 	parser = new DOMParser();
 	xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("GET","phraseTests.xml",false);
+	//xmlhttp.open("GET","phraseTests.xml",false); // Only works in the same domain
+	xmlhttp.open("GET","http://truematchbox.com/drag/dataSender.php",false);
 	xmlhttp.send();
 	if (xmlhttp.responseXML != null) 	xmlDoc = xmlhttp.responseXML; 
 	else xmlDoc = parser.parseFromString(xmlhttp.responseText,"text/xml");
@@ -291,7 +287,6 @@ function positionFloatingBlanks() {
 	}
 }
 
-// TODO this function should do a better job of resizing elements on a small screen at start-up //
 function repositionWordDivs(runAtInit) {
 	for (var i=0; i < statusFlags.numberOfWords; i++) {
 		var rightLimit = $("#rootDiv").innerWidth() - $(wordBoxDivArray[i]).innerWidth() /2;
@@ -345,7 +340,6 @@ function OLDorientationChangeFunction(event) {
 	} // check each word, maybe it went off the screen
 }
 
-// TODO this function should do a better job of placing word divs in a nice place on rotation, fold in the (above) old version //
 function orientationChangeFunction(event) {
 	var elementClimb;
 	var tempRatio = statusFlags.stretchUpRatio;
